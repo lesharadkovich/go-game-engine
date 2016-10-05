@@ -1,0 +1,32 @@
+<html>
+    <body>
+        <h1> Some text </h1>
+
+        <canvas id='example'>Обновите браузер</canvas>
+        <script>
+            var example = document.getElementById("example"),
+			ctx = example.getContext('2d');
+            example.width  = 1000;
+            example.height = 1000;
+
+            var x = 400;
+            var y = 100;
+            var field_size = 400;
+
+            ctx.strokeRect(400, 100, 400, 400);
+            ctx.strokeRect(395, 95, 410, 410);
+            ctx.fillStyle = "rgb(255,165,0)";
+            ctx.fillRect(x, y, field_size, field_size);
+            
+            for(i = 0; i < 5; i++) {
+                ctx.moveTo(x + 80*i, y);
+                ctx.lineTo(x + 80*i, y + field_size);
+                ctx.stroke();
+
+                ctx.moveTo(x, y + 80*i);
+                ctx.lineTo(x + field_size, y + 80*i);
+                ctx.stroke();
+            }
+        </script>
+    </body>
+</html>
