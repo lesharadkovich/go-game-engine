@@ -1,0 +1,22 @@
+<html>
+    <body>
+        <h1> Some text </h1>
+        <canvas id='canvas'>Обновите браузер</canvas>
+        <script type = "text/javascript" src = "gamefield.js"> </script>
+        <script type = "text/javascript" src = "point.js"> </script>
+        <script>
+            var width = 500;
+
+            var canvas = document.getElementById('canvas');
+            ctx = canvas.getContext('2d');
+            canvas.width = width;
+            canvas.height = width;
+
+            var field = new Field(width);
+            field.drawOn(canvas);
+
+            var point = new Point();
+            point.draw(canvas, field);
+        </script>
+    </body>
+</html>
