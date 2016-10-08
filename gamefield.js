@@ -31,3 +31,4 @@ Field.prototype.drawOn = function (canvas) {
         ctx.stroke();
     }
 }
+
