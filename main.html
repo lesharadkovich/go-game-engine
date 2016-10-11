@@ -4,35 +4,37 @@
     </head>
     
     <body>
-        <div class="title" align = "center">
-            <h1> Some text </h1>
-        </div>
-        
-        <canvas id='canvas'>Обновите браузер</canvas>
-        <script type = "text/javascript" src = "gamefield.js"> </script>
-        <script type = "text/javascript" src = "point.js"> </script>
-        <script type = "text/javascript" src = "painter.js"> </script>
-        <link rel = "stylesheet" type = "text/css" href="position.css"> </link>
-        
-        <script>
-            var width = 500;
+        <div class="block" align = "center">
+            <div class="title" align = "center">
+                <h1> GO game engine </h1>
+            </div>
+            
+            <canvas id='canvas'>Обновите браузер</canvas>
+            <script type = "text/javascript" src = "gamefield.js"> </script>
+            <script type = "text/javascript" src = "point.js"> </script>
+            <script type = "text/javascript" src = "painter.js"> </script>
+            <link rel = "stylesheet" type = "text/css" href="position.css"> </link>
+            
+            <script>
+                var width = 700;
 
-            var canvas = document.getElementById('canvas');
-            ctx = canvas.getContext('2d');
-            canvas.width = width;
-            canvas.height = width;
+                var canvas = document.getElementById('canvas');
+                ctx = canvas.getContext('2d');
+                canvas.width = width;
+                canvas.height = width;
 
-            var painter = new Painter(canvas); 
+                var painter = new Painter(canvas); 
 
-            var field = new Field(width);
-            painter.drawField(field);
+                var field = new Field(width);
+                painter.drawField(field);
 
-            var point = new Point();            
-        </script>
+                var point = new Point();            
+            </script>
 
-        <div class="buttons" align = "center">
-            <p style="text-align: center"><button id = "pass">PASS</button>
-            <p style="text-align: center"><button id = "resign">RESIGN</button>
+            <div class="buttons" align = "center">
+                <p style="text-align: center"><button id = "pass">PASS</button>
+                <p style="text-align: center"><button id = "resign">RESIGN</button>
+            </div>
         </div>
     </body>
 </html>

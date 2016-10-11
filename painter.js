@@ -41,13 +41,12 @@ function Painter(canvas) {
 Painter.prototype.drawField = function(field) {
     ctx = canvas.getContext('2d');
 
-    var x = field.canvasOffset;
-    var y = field.canvasOffset;
+    var x = field.canvasOffset();
+    var y = field.canvasOffset();
 
-    ctx.strokeRect(x, y, field.boardWidth(), field.boardWidth());
-    ctx.strokeRect(x - field.canvasOffset, y - field.canvasOffset, canvas.width, canvas.height);
     ctx.fillStyle = field.backgroud;
-    ctx.fillRect(x, y, field.boardWidth(), field.boardWidth());
+    ctx.fillRect(x - field.canvasOffset(), y - field.canvasOffset(), canvas.width, canvas.height);
+    ctx.strokeRect(x, y, field.boardWidth(), field.boardWidth());
 
     var cellWidth = field.boardWidth() / field.cellNumber;
     for (i = 0; i < field.cellNumber; i++) {

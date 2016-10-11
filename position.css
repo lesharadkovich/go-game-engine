@@ -1,22 +1,11 @@
 body {
-    background: lavender;
+    background: lemonchiffon;
 }
-.title {
-    width: 500;
+.block {
+    width: 700;
     position: relative;
     left: 50%;
-    margin-left: -250px;
-}
-canvas {
-    position: relative;
-    left: 50%;
-    margin-left: -250px;
-}
-.buttons {
-    width: 500;
-    position: relative;
-    left: 50%;
-    margin-left: -250px;
+    margin-left: -350px;
 }
 #pass {
     position: relative;
