@@ -1,8 +1,9 @@
 function Field(width) {
     this.width = width,
-    this.cellNumber = 6,
+    this.cellNumber = 4,
     this.backgroud = "rgb(255, 170, 0)",
-    this.canvasOffset = 40
+    this.canvasOffset = 50,
+    this.stoneCoords = []
 }
 
 Field.prototype.boardWidth = function () {

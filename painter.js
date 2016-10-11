@@ -3,33 +3,40 @@ function Painter(canvas) {
 
     addEventListener('click', function (event) {
         var mousePos = point.getMousePos(canvas, event);
-        var cellWidth = field.boardWidth() / field.cellNumber;
-        var radius = cellWidth * 0.3;
-        var color;
+        var centerPoint = point.getPointCoords(field, mousePos);
+        var isStoneExist = false;
 
-        if (point.isBlack) {
-            color = "black";
-            point.isBlack = false;
-        }
-        else {
-            color = "white";
-            point.isBlack = true;
+        for (var i = 0; i < field.stoneCoords.length; i++) {
+            if(centerPoint.x === field.stoneCoords[i].x && 
+               centerPoint.y === field.stoneCoords[i].y) {
+                isStoneExist = true;
+                break;
+            }
         }
 
-        var centerPoint = point.getPointCoords(field, mousePos, cellWidth, radius);
 
-        var ctx = this.canvas.getContext('2d');
-        ctx.beginPath();
-        ctx.arc(centerPoint.x, centerPoint.y, radius, 0, Math.PI * 2, true);
-        ctx.fillStyle = color;
-        ctx.fill();
-        ctx.stroke();
+        if(!isStoneExist) {
+            field.stoneCoords.push(centerPoint);
+
+            if (point.isBlack) point.color = "black";
+            else point.color = "white";
+        
+            point.isBlack = !point.isBlack;
+
+            var ctx = this.canvas.getContext('2d');
+            ctx.beginPath();
+            ctx.arc(centerPoint.x, centerPoint.y, point.radius, 0, Math.PI * 2, true);
+            ctx.fillStyle = point.color;
+            ctx.fill();
+            ctx.stroke();
+        }
 
     }, false);
 }
 
-Painter.prototype.drawStone = function(point, field) {
-}
+// Painter.prototype.drawStone = function(centerPoint, radius, color) {
+    
+// }
 
 Painter.prototype.drawField = function(field) {
     ctx = canvas.getContext('2d');

@@ -1,0 +1,29 @@
+body {
+    background: lavender;
+}
+.title {
+    width: 500;
+    position: relative;
+    left: 50%;
+    margin-left: -250px;
+}
+canvas {
+    position: relative;
+    left: 50%;
+    margin-left: -250px;
+}
+.buttons {
+    width: 500;
+    position: relative;
+    left: 50%;
+    margin-left: -250px;
+}
+#pass {
+    position: relative;
+    left: -10%;
+}
+#resign {
+    position: relative;
+    bottom: 37px;
+    left: 10%;
+}

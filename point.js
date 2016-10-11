@@ -1,5 +1,8 @@
 function Point() {
-    this.isBlack = true
+    this.isBlack = true,
+    this.color = "black",
+    this.cellWidth = field.boardWidth() / field.cellNumber;
+    this.radius = this.cellWidth * 0.4;
 }
 
 
@@ -14,12 +17,12 @@ Point.prototype.getMousePos = function (canvas, event) {
     };
 }
 
-Point.prototype.getPointCoords = function (field, mousePos, cellWidth, radius) {
-    var lineX = Math.round((mousePos.x - field.canvasOffset) / cellWidth);
-    var lineY = Math.round((mousePos.y - field.canvasOffset) / cellWidth);
+Point.prototype.getPointCoords = function (field, mousePos) {
+    var lineX = Math.round((mousePos.x - field.canvasOffset) / this.cellWidth);
+    var lineY = Math.round((mousePos.y - field.canvasOffset) / this.cellWidth);
 
     return {
-        x: field.canvasOffset + lineX * cellWidth,
-        y: field.canvasOffset + lineY * cellWidth
+        x: field.canvasOffset + lineX * this.cellWidth,
+        y: field.canvasOffset + lineY * this.cellWidth
     }
 }

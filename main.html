@@ -4,11 +4,16 @@
     </head>
     
     <body>
-        <h1> Some text </h1>
+        <div class="title" align = "center">
+            <h1> Some text </h1>
+        </div>
+        
         <canvas id='canvas'>Обновите браузер</canvas>
         <script type = "text/javascript" src = "gamefield.js"> </script>
         <script type = "text/javascript" src = "point.js"> </script>
         <script type = "text/javascript" src = "painter.js"> </script>
+        <link rel = "stylesheet" type = "text/css" href="position.css"> </link>
+        
         <script>
             var width = 500;
 
@@ -24,18 +29,10 @@
 
             var point = new Point();            
         </script>
-        <p style="text-align: center"><button>PASS</button>
-        <p style="text-align: center"><button>RESIGN</button>
-        <style>
-            h1 {
-                position: relative;
-                left: 45%;
-            }
-            canvas {
-                position: relative;
-                left: 50%;
-                margin-left: -250px;
-            }
-        </style>
+
+        <div class="buttons" align = "center">
+            <p style="text-align: center"><button id = "pass">PASS</button>
+            <p style="text-align: center"><button id = "resign">RESIGN</button>
+        </div>
     </body>
 </html>
