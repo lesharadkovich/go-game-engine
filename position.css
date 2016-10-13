@@ -9,10 +9,10 @@ body {
 }
 #pass {
     position: relative;
-    left: -10%;
+    left: -25%;
 }
 #resign {
     position: relative;
-    bottom: 37px;
-    left: 10%;
+    bottom: 110px;
+    left: 25%;
 }

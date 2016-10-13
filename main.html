@@ -4,17 +4,18 @@
     </head>
     
     <body>
+        <script type = "text/javascript" src = "board.js"> </script>
+        <script type = "text/javascript" src = "stone.js"> </script>
+        <script type = "text/javascript" src = "painter.js"> </script>
+        <link rel = "stylesheet" type = "text/css" href="position.css"> </link>
+
         <div class="block" align = "center">
             <div class="title" align = "center">
                 <h1> GO game engine </h1>
             </div>
             
             <canvas id='canvas'>Обновите браузер</canvas>
-            <script type = "text/javascript" src = "gamefield.js"> </script>
-            <script type = "text/javascript" src = "point.js"> </script>
-            <script type = "text/javascript" src = "painter.js"> </script>
-            <link rel = "stylesheet" type = "text/css" href="position.css"> </link>
-            
+
             <script>
                 var width = 700;
 
@@ -24,16 +25,19 @@
                 canvas.height = width;
 
                 var painter = new Painter(canvas); 
+                var board = new Board(width);
+                var stone = new Stone(board); 
 
-                var field = new Field(width);
-                painter.drawField(field);
-
-                var point = new Point();            
+                painter.drawBoard(board);       
             </script>
 
             <div class="buttons" align = "center">
-                <p style="text-align: center"><button id = "pass">PASS</button>
-                <p style="text-align: center"><button id = "resign">RESIGN</button>
+                <p style="text-align: center"><button id = "pass">
+                    <img src="pass.png" alt="PASS" 
+                     style="vertical-align: middle"></button>
+                <p style="text-align: center"><button id = "resign">
+                    <img src="resign.png" alt="RESIGN" 
+                     style="vertical-align: middle"></button>
             </div>
         </div>
     </body>

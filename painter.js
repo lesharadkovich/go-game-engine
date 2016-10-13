@@ -1,61 +1,54 @@
 function Painter(canvas) {
     this.canvas = canvas;
-
-    addEventListener('click', function (event) {
-        var mousePos = point.getMousePos(canvas, event);
-        var centerPoint = point.getPointCoords(field, mousePos);
-        var isStoneExist = false;
-
-        for (var i = 0; i < field.stoneCoords.length; i++) {
-            if(centerPoint.x === field.stoneCoords[i].x && 
-               centerPoint.y === field.stoneCoords[i].y) {
-                isStoneExist = true;
-                break;
-            }
-        }
-
-
-        if(!isStoneExist) {
-            field.stoneCoords.push(centerPoint);
-
-            if (point.isBlack) point.color = "black";
-            else point.color = "white";
-        
-            point.isBlack = !point.isBlack;
-
-            var ctx = this.canvas.getContext('2d');
-            ctx.beginPath();
-            ctx.arc(centerPoint.x, centerPoint.y, point.radius, 0, Math.PI * 2, true);
-            ctx.fillStyle = point.color;
-            ctx.fill();
-            ctx.stroke();
-        }
-
-    }, false);
 }
 
-// Painter.prototype.drawStone = function(centerPoint, radius, color) {
-    
-// }
+Painter.prototype.drawStone = function (centerPoint, stone, board) {
+    var x = board.canvasOffset() + centerPoint.x * board.cellWidth;
+    var y = board.canvasOffset() + centerPoint.y * board.cellWidth;
 
-Painter.prototype.drawField = function(field) {
+    var ctx = this.canvas.getContext('2d');
+    ctx.beginPath();
+    ctx.arc(x, y, stone.radius, 0, Math.PI * 2, true);
+    ctx.fillStyle = stone.color;
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(x, y, stone.radius / 3, 0, Math.PI * 2, true);
+    ctx.fillStyle = "gray";
+    ctx.fill();
+    
+    var index = board.stoneCoords.length - 2;
+    if(index >= 0) {
+        var previosX = board.canvasOffset() + board.stoneCoords[index].x * board.cellWidth;
+        var previosY = board.canvasOffset() + board.stoneCoords[index].y * board.cellWidth;
+        
+        ctx.beginPath();
+        ctx.arc(previosX, previosY, stone.radius, 0, Math.PI * 2, true);
+        if (stone.isBlack) stone.color = "black";
+        else stone.color = "white";
+        ctx.fillStyle = stone.color;
+        ctx.fill();
+    }
+}
+
+Painter.prototype.drawBoard = function(board) {
     ctx = canvas.getContext('2d');
 
-    var x = field.canvasOffset();
-    var y = field.canvasOffset();
+    var x = board.canvasOffset();
+    var y = board.canvasOffset();
 
-    ctx.fillStyle = field.backgroud;
-    ctx.fillRect(x - field.canvasOffset(), y - field.canvasOffset(), canvas.width, canvas.height);
-    ctx.strokeRect(x, y, field.boardWidth(), field.boardWidth());
+    ctx.fillStyle = board.backgroud;
+    ctx.fillRect(x - board.canvasOffset(), y - board.canvasOffset(), canvas.width, canvas.height);
+    ctx.strokeRect(x, y, board.boardWidth(), board.boardWidth());
 
-    var cellWidth = field.boardWidth() / field.cellNumber;
-    for (i = 0; i < field.cellNumber; i++) {
-        ctx.moveTo(x + cellWidth * i, y);
-        ctx.lineTo(x + cellWidth * i, y + field.boardWidth());
+    for (i = 0; i < board.cellNumber; i++) {
+        ctx.moveTo(x + board.cellWidth * i, y);
+        ctx.lineTo(x + board.cellWidth * i, y + board.boardWidth());
         ctx.stroke();
 
-        ctx.moveTo(x, y + cellWidth * i);
-        ctx.lineTo(x + field.boardWidth(), y + cellWidth * i);
+        ctx.moveTo(x, y + board.cellWidth * i);
+        ctx.lineTo(x + board.boardWidth(), y + board.cellWidth * i);
         ctx.stroke();
     }
 }
