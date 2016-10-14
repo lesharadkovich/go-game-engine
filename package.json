@@ -1,0 +1,23 @@
+{
+  "name": "go-game-engine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gamefield.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lesharadkovich/go-game-engine.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lesharadkovich/go-game-engine/issues"
+  },
+  "homepage": "https://github.com/lesharadkovich/go-game-engine#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.1.0"
+  }
+}
