@@ -1,34 +1,39 @@
-function Board(width) {
-    this.width = width,
+class Board {
+   
+    constructor(width) {
+        this.width = width,
         this.cellNumber = 9,
         this.backgroud = "rgb(255, 170, 0)",
-        this.stoneCoords = [],
+        this.stoneCoords = {
+            "black": [],
+            "white": []
+        },
         this.cellWidth = this.boardWidth() / this.cellNumber
-}
-
-Board.prototype.boardWidth = function () {
-    return this.width - 2 * this.canvasOffset();
-}
-
-Board.prototype.canvasOffset = function () {
-    if (this.cellNumber <= 9)
-        return 100;
-    else
-        return 50;
-}
-
-Board.prototype.isStoneExists = function (centerCoords) {
-    for (var i = 0; i < this.stoneCoords.length; i++) {
-        if (centerCoords.x === this.stoneCoords[i].x &&
-            centerCoords.y === this.stoneCoords[i].y)
-            return true;
     }
 
-    // console.log(JSON.stringify(centerCoords, null, 2));
+    boardWidth() {
+        return this.width - 2 * this.canvasOffset();
+    }
 
-    // console.log(JSON.stringify(this.stoneCoords, null, 2));
+    canvasOffset() {
+        if (this.cellNumber <= 9)
+            return 100;
+        else
+            return 50;
+    }
 
-    // var index = _.findIndex(this.stoneCoords, centerCoords); 
-    // if(index != -1)
-    //     return true;
+    isStoneExists(centerCoords) {
+        for(var color in this.stoneCoords) {
+            for (var i = 0; i < this.stoneCoords[color].length; i++) {
+                for (var j = 0; j < this.stoneCoords[color].length; j++) {
+                    var current =  board.stoneCoords[color][i].coords[j];
+
+                    if (centerCoords.x === current.x &&
+                        centerCoords.y === current.y)
+                        return true;
+                }
+            }
+        }
+    }
+
 }

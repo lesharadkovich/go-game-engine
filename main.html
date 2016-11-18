@@ -7,6 +7,7 @@
         <script type = "text/javascript" src = "src/board.js"> </script>
         <script type = "text/javascript" src = "src/stone.js"> </script>
         <script type = "text/javascript" src = "src/painter.js"> </script>
+        <script type = "text/javascript" src = "src/game.js"> </script>
         <link rel = "stylesheet" type = "text/css" href="position.css"> </link>
 
         <div class="block" align = "center">
@@ -27,34 +28,23 @@
                 var painter = new Painter(canvas); 
                 var board = new Board(width);
                 var stone = new Stone(board); 
+                var game = new Game();
 
                 painter.drawBoard(board);
-
-
-                addEventListener('click', function (event) {
-                    var mousePos = stone.getMousePos(canvas, event);
-                    var centerCoords = stone.getPointCoords(board, mousePos);
-
-                    if(centerCoords && !board.isStoneExists(centerCoords)) {
-                        if (stone.isBlack) stone.color = "black";
-                        else stone.color = "white";
-                        stone.isBlack = !stone.isBlack;
-                        board.stoneCoords.push(centerCoords);
-
-                        painter.drawStone(centerCoords, stone, board);
-                    }
-
-                }, false);
-                   
             </script>
 
             <div class="buttons" align = "center">
-                <p style="text-align: center"><button id = "pass">
-                    <img src="img/pass.png" alt="PASS" 
-                     style="vertical-align: middle"></button>
-                <p style="text-align: center"><button id = "resign">
-                    <img src="img/resign.png" alt="RESIGN" 
-                     style="vertical-align: middle"></button>
+                <p style="text-align: center">
+                    <button id = "pass">
+                        <img src="img/pass.png" alt="PASS" 
+                        style="vertical-align: middle">
+                    </button>
+
+                <p style="text-align: center">
+                    <button id = "resign">
+                        <img src="img/resign.png" alt="RESIGN" 
+                        style="vertical-align: middle">
+                    </button>
             </div>
         </div>
     </body>
