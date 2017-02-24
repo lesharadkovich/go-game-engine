@@ -8,6 +8,8 @@ class Board {
             "black": [],
             "white": []
         },
+        this.previousStone = 0,
+        this.deletedCoords = [],
         this.cellWidth = this.boardWidth() / this.cellNumber
     }
 
@@ -25,15 +27,36 @@ class Board {
     isStoneExists(centerCoords) {
         for(var color in this.stoneCoords) {
             for (var i = 0; i < this.stoneCoords[color].length; i++) {
-                for (var j = 0; j < this.stoneCoords[color].length; j++) {
-                    var current =  board.stoneCoords[color][i].coords[j];
-
-                    if (centerCoords.x === current.x &&
-                        centerCoords.y === current.y)
-                        return true;
+                if(this.isClusterContainsStone(i, centerCoords, color)) {
+                    return true;
                 }
             }
         }
+
+        return false;
+    }
+
+    isClusterContainsStone(indexOfCluster, centerCoords, color) {
+        for (var i = 0; i < this.stoneCoords[color][indexOfCluster].length; i++) {
+            var current = this.stoneCoords[color][indexOfCluster][i];
+
+            if (centerCoords.x === current.x && centerCoords.y === current.y) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    isStoneDeleted(stoneCoords) {
+        for(var i = 0; i < this.deletedCoords.length; i++) {
+            if(this.deletedCoords[i].x === stoneCoords.x &&
+               this.deletedCoords[i].y === stoneCoords.y) {
+                   return true;
+               }
+        }
+
+        return false;
     }
 
 }

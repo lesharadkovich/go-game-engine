@@ -19,7 +19,8 @@ class Stone {
         }
 
         if (coords.x >= 0 && coords.x <= board.cellNumber &&
-            coords.y >= 0 && coords.y <= board.cellNumber) {
+            coords.y >= 0 && coords.y <= board.cellNumber) 
+            {
                 return coords;
             }
         else return null;

@@ -4,9 +4,9 @@ class Painter{
         this.canvas = canvas;
     }
 
-    drawStone(centerCoords, stone, board, game) {
-        var x = board.canvasOffset() + centerCoords.x * board.cellWidth;
-        var y = board.canvasOffset() + centerCoords.y * board.cellWidth;
+    drawStone(addingCoords, stone, board) {
+        var x = board.canvasOffset() + addingCoords.x * board.cellWidth;
+        var y = board.canvasOffset() + addingCoords.y * board.cellWidth;
 
         var ctx = this.canvas.getContext('2d');
         ctx.beginPath();
@@ -20,18 +20,56 @@ class Painter{
         ctx.fillStyle = "gray";
         ctx.fill();
 
-        var previousColor = game.color[game.currentPlayerColor];
-        var index = board.stoneCoords[previousColor].length - 1;
-        var previousStone = board.stoneCoords[previousColor][index];
-        if(index >= 0) {
-            var previosX = board.canvasOffset() + previousStone.x * board.cellWidth;
-            var previosY = board.canvasOffset() + previousStone.y * board.cellWidth;
+
+        if(board.previousStone !== 0) {
+            var previosX = board.canvasOffset() + board.previousStone.x * board.cellWidth;
+            var previosY = board.canvasOffset() + board.previousStone.y * board.cellWidth;
             
             ctx.beginPath();
             ctx.arc(previosX, previosY, stone.radius, 0, Math.PI * 2, true);
             ctx.fillStyle = game.color[game.currentPlayerColor];
             ctx.fill();
         }
+    }
+
+    deleteStone(deletingCoords, stone, board) {
+
+        var x = board.canvasOffset() + deletingCoords.x * board.cellWidth;
+        var y = board.canvasOffset() + deletingCoords.y * board.cellWidth;
+
+        var ctx = this.canvas.getContext('2d');
+        
+        ctx.beginPath();
+        ctx.arc(x, y, stone.radius + 5, 0, Math.PI * 2, true);
+        ctx.fillStyle = board.backgroud;
+        ctx.fill();
+        ctx.strokeStyle = board.backgroud;
+        ctx.stroke();
+
+
+        var ctxx = this.canvas.getContext('2d');
+        ctxx.strokeStyle = "black";
+        
+        var left = x - stone.radius - 5;
+        var right = x + stone.radius + 5;
+        var top = y - stone.radius - 5;
+        var bottom = y + stone.radius + 5;
+
+        if(deletingCoords.x === 0) left = x;
+        if(deletingCoords.y === 0) top = y;
+        if(deletingCoords.x === board.cellNumber) right = x;
+        if(deletingCoords.y === board.cellNumber) bottom = y;
+
+
+        var line = new Path2D();
+        line.moveTo(left, y);
+        line.lineTo(right, y);
+        ctxx.stroke(line);
+
+        line.moveTo(x, top);
+        line.lineTo(x, bottom);
+        ctxx.stroke(line);
+
     }
 
     drawBoard(board) {
