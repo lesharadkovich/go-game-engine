@@ -1,0 +1,29 @@
+<% layout('layout/page') -%>
+<% block('title', "Рейтинг") -%>
+
+<table align='center' width=1000>
+   <tr>
+    <th>Имя</th>
+    <th>Побед</th>
+    <th>Поражений</th>
+    <th>Дата регистрации</th>
+   </tr>
+ 
+   <% userList.forEach(function(current) {
+        if(user && user.username === current.username) { %>
+            <tr>
+                <td><b><%=current.username%></b></td>
+                <td><b><%=current.wins%></b></td>
+                <td><b><%=current.loses%></b></td>
+                <td><b><%=current.created.toDateString()%></b></td>
+            </tr>
+        <% } else { %> 
+            <tr>
+                <td><%=current.username%></td>
+                <td><%=current.wins%></td>
+                <td><%=current.loses%></td>
+                <td><%=current.created.toDateString()%></td>
+            </tr>     
+        <% } %>
+    <% }); %>
+</table>

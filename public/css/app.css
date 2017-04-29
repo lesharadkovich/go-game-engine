@@ -1,0 +1,36 @@
+body {
+    background-color: lightblue;
+}
+.status {
+    position: fixed;
+    margin: 20%;
+    z-index: 5;
+    font-size: 27px;
+    width: 700px;
+    padding: 20px;
+    background-color: lightblue;
+    color: black;
+}
+#choice {
+    position: fixed;
+    margin: 20%;
+    font-size: 27px;
+    width: 700px;
+    padding: 20px;
+    color: black;
+}
+.online:hover{
+    background-color: lightblue;
+	/*color:#fff;*/
+	transition: 0.5s;
+}
+#overlay {
+  background-color: #000; /* Чёрный фон */
+  height: 100%; /* Высота максимальна */
+  left: 0; /* Нулевой отступ слева */
+  opacity: 0.70; /* Степень прозрачности */
+  position: fixed; /* Фиксированное положение */
+  top: 0; /* Нулевой отступ сверху */
+  width: 100%; /* Ширина максимальна */
+  z-index: 3; /* Заведомо быть НАД другими элементами */
+}

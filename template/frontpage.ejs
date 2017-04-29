@@ -1,0 +1,9 @@
+<% layout('layout/page') -%>
+<% block('title', 'Привет ≥︺‿︺≤'); -%>
+
+
+<% if (user) { %>
+    <p class="lead">Привет, <%=user.username%>!</p>
+<% } else { %>
+    <p class="lead">Всем привет!</p>
+<% } %>
