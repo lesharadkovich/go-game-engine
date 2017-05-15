@@ -1,3 +1,9 @@
+/*body {
+    background-color: lightblue;
+    background-image: url(../img/background.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+}*/
 body {
     background-color: lightblue;
 }
@@ -33,4 +39,10 @@ body {
   top: 0; /* Нулевой отступ сверху */
   width: 100%; /* Ширина максимальна */
   z-index: 3; /* Заведомо быть НАД другими элементами */
+}
+.nav li:hover {
+    border-radius: 50px;
+    background-color: lightblue;
+    /*color:#fff;*/
+	transition: 0.5s;
 }
