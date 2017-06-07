@@ -1,9 +1,6 @@
 body {
     background-color: lemonchiffon;
 }
-#room {
-    margin-bottom: 15%;
-}
 #pass {
     margin: 3% 10% 10% 10%;
 }
@@ -13,24 +10,57 @@ body {
 h4 {
     margin-left: 50%;
 }
-aside {
+.onlineList {
     background: #f0f0f0;
     padding: 10px;
-    width: 200px;
-    float: left;
-}
-article {
-    margin-left: 220px;
-    display: block;
-}
-input {
-    margin-top: 70%;
 }
 
-#player {
-    width: 40%;
+form {
+    margin-top: 15px;
+    margin-bottom: 5%;
+}
+
+#chatMessages {
+    width: auto;
+    height: 700px;
+    overflow-y: auto;
+}
+
+#gameMessages {
+    width: auto;
+    height: 300px;
+    overflow-y: auto;
+    border: 1px solid black;
+    background-color: aliceblue;
+}
+
+#onlineList li {
+    margin-top: 5px;
+}
+
+
+/*
+.messageInChat {
+    overflow: hidden;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    padding: 5px;
+}
+.message {
+    max-width: 286px;
+    background: #00a6e8;
+    color: white;
+    left: 10px;
+    width: 80%;
     float: left;
+    padding: 5px;
 }
-#size {
-    margin-left: 50%;
-}
+.incomingMessage {
+    max-width: 286px;
+    background: #dedede;
+    color: black;
+    right: 10px;
+    width: 80%;
+    float: right;
+    padding: 5px;
+}*/

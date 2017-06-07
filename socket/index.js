@@ -40,44 +40,66 @@ function loadUser(session, callback) {
     })
 }
 
-function getOnlineList(io, socket) {
+
+function getOnlineList(io, socket, username) {
+    
     var onlineListId = Object.keys(io.sockets.sockets);
     var onlineListNames = [];
+    
+    for(var i = 0; i < onlineListId.length; i++) {
+        var socketId = onlineListId[i];
+        
+        var _socket = io.sockets.connected[socketId];
+        var _username = _socket.handshake.user.username;
+        
+        if (onlineListNames.indexOf(_username) === -1 && _username !== username) {
+            onlineListNames.push(_username);
+        }
+    }
+    
+    
+    socket.emit('online list', onlineListNames);
+    //socket.broadcast.emit('online list', onlineListNames);
+
+    return onlineListNames;
+}
+
+function sendInviteToEnemy(io, enemyName, username, gameIndex, creatorId) {
+    var onlineListId = Object.keys(io.sockets.sockets);
 
     onlineListId.forEach(function (socketId) {
         var _socket = io.sockets.connected[socketId];
         var _username = _socket.handshake.user.username;
 
-        if (onlineListNames.indexOf(_username) === -1) {
-            onlineListNames.push(_username);
+
+        if (_username == enemyName) {
+            var enemyId = _socket.id;
+
+            io.to(enemyId).emit('game invite', username, games[gameIndex].room, creatorId);
         }
     });
-
-    return onlineListNames;
 }
 
-function getIdByUsername(io, enemyName) {
+function cancelOtherInvites(io, username, socket) {
     var onlineListId = Object.keys(io.sockets.sockets);
-    var enemyId;
 
     onlineListId.forEach(function (socketId) {
         var _socket = io.sockets.connected[socketId];
-        var username = _socket.handshake.user.username;
+        var _username = _socket.handshake.user.username;
 
 
-        if (username == enemyName) {
-            enemyId = _socket.id;
+        if (_username == username && _socket.id != socket.id) {
+            io.to(_socket.id).emit('cancel invite');
         }
     });
-
-    return enemyId;
 }
+
 
 function uuid() {
     var s4 = function () {
         return Math.floor(Math.random() * 0x10000).toString(16);
     };
-    return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
+    return s4() + s4() + s4() + s4() + s4() + s4() + s4() + s4();
 }
 
 function createGame(username, enemyName, size) {
@@ -88,17 +110,21 @@ function createGame(username, enemyName, size) {
 
     return {
         room: uuid(),
-        "black": username,
-        "white": enemyName,
+        "black": {
+            name: username,
+            score: 0,
+            id: 0
+        },
+        "white": {
+            name: enemyName,
+            score: 0,
+            id: 0
+        },
         size: size,
         board: board,
         rules: rules,
         stone: stone,
-        stonePlaces: size * size,
-        score: {
-            "black": 0,
-            "white": 0
-        }
+        stonePlaces: size * size
     };
 }
 
@@ -119,7 +145,7 @@ function isGameAvailible(size) {
     var index = -1;
 
     games.forEach(function (game, i, games) {
-        if ((size === game.size) && game["white"] == 0) {
+        if ((size === game.size) && game["white"].id == 0) {
             index = i;
             return;
         }
@@ -131,7 +157,7 @@ function isGameAvailible(size) {
 function isYourMove(username, gameIndex) {
     var currentMove = games[gameIndex].rules.currentPlayerColor;
 
-    if (username === games[gameIndex][currentMove]) return true;
+    if (username === games[gameIndex][currentMove].name) return true;
     else return false;
 }
 
@@ -154,10 +180,14 @@ function makeMove(addingCoords, gameIndex, io, socket) {
     var yourColor = games[gameIndex].rules.currentPlayerColor;
     var enemyColor = games[gameIndex].rules.color[yourColor];
 
-    games[gameIndex].score[yourColor] += surroundedCoords.length;
+    games[gameIndex][yourColor].score += surroundedCoords.length;
 
-    changeInfoText(gameIndex, socket);
-
+    //changeInfoText(gameIndex, socket);
+    var yourScore = games[gameIndex][yourColor].score;
+    var enemyScore = games[gameIndex][enemyColor].score;
+    socket.broadcast.to(games[gameIndex].room).emit('change score text', enemyScore, yourScore);
+    socket.emit('change score text', yourScore, enemyScore);
+    
 
     games[gameIndex].board.previousStone = addingCoords;
     games[gameIndex].rules.switchPlayer();
@@ -166,13 +196,15 @@ function makeMove(addingCoords, gameIndex, io, socket) {
     if (games[gameIndex].stonePlaces == 0) {
         //win or lose
 
-        if (games[gameIndex].score["black"] > games[gameIndex].score["white"]) {
-            var winId = getIdByUsername(io, games[gameIndex]["black"]);
-            var loseId = getIdByUsername(io, games[gameIndex]["white"]);
+        if (games[gameIndex]["black"].score > games[gameIndex]["white"].score) {
+//            var winId = getIdByUsername(io, games[gameIndex]["black"]);
+//            var loseId = getIdByUsername(io, games[gameIndex]["white"]);
+            var winId = games[gameIndex]["black"].id;
+            var loseId = games[gameIndex]["white"].id;
         }
-        else if (games[gameIndex].score["black"] < games[gameIndex].score["white"]) {
-            var winId = getIdByUsername(io, games[gameIndex]["white"]);
-            var loseId = getIdByUsername(io, games[gameIndex]["black"]);
+        else if (games[gameIndex]["black"].score < games[gameIndex]["white"].score) {
+            var winId = games[gameIndex]["white"].id;
+            var loseId = games[gameIndex]["black"].id;
         }
 
         //game over
@@ -182,10 +214,10 @@ function makeMove(addingCoords, gameIndex, io, socket) {
     }
 }
 
-function gameOver(io, winId, loseId) {
+function gameOver(io, winId, loseId) {    
     var winSocket = io.sockets.connected[winId];
     var loseSocket = io.sockets.connected[loseId];
-
+    
     //save to DB
     winSocket.handshake.user.wins++;
     winSocket.handshake.user.save();
@@ -197,19 +229,26 @@ function gameOver(io, winId, loseId) {
     io.to(loseId).emit('game over', 'Вы проиграли!');
 }
 
-function startGame(gameIndex, username, io, socket) {
-    socket.broadcast.to(games[gameIndex].room).emit('start game', username, games[gameIndex].room);
-    socket.emit('start game', games[gameIndex]["black"], games[gameIndex].room);
+//
+function changeInfoText(gameIndex, socket, username) {
+    if(username === games[gameIndex]["black"].name) {
+        var yourColor = "black";
+        var enemyColor = "white";
+        var move = true;
+    } else {
+        var yourColor = "white";
+        var enemyColor = "black";
+        var move = false;
+    }
+    
+    var yourScore = games[gameIndex][yourColor].score;
+    var enemyScore = games[gameIndex][enemyColor].score;
+    
+    var yourName = games[gameIndex][yourColor].name;
+    var enemyName = games[gameIndex][enemyColor].name;
 
-    io.in(games[gameIndex].room).emit('drawBoard', games[gameIndex].board);
-}
-
-function changeInfoText(gameIndex, socket) {
-    var yourColor = games[gameIndex].rules.currentPlayerColor;
-    var enemyColor = games[gameIndex].rules.color[yourColor];
-
-    socket.broadcast.to(games[gameIndex].room).emit('change info text', true, games[gameIndex].score[enemyColor], games[gameIndex].score[yourColor]);
-    socket.emit('change info text', false, games[gameIndex].score[yourColor], games[gameIndex].score[enemyColor]);
+    socket.emit('change score text', yourScore, enemyScore);
+    socket.emit('change info text', yourName, enemyName, move);
 }
 
 
@@ -282,16 +321,19 @@ module.exports = function (server) {
         });
 
     });
-
-
-    io.on('connection', function (socket) {
+    
+    
+    io.on('connection', function(socket) {        
         var username = socket.handshake.user.username;
-
-        var onlineListNames = getOnlineList(io, socket);
-        socket.emit('online list', onlineListNames);
-        socket.broadcast.emit('join', username, onlineListNames);
-
-
+        
+        getOnlineList(io, socket, username);
+        socket.broadcast.emit('join');
+        
+        
+        socket.on('get online list', function () {   
+            getOnlineList(io, socket, username);
+        });
+        
         socket.on('disconnect', function () {
             socket.broadcast.emit('leave', username);
         });
@@ -301,41 +343,42 @@ module.exports = function (server) {
             socket.broadcast.emit('message #chat', username, text);
             callback && callback();
         });
-
-
-
+        
+        
         //namespace: play. Handles play requests
-
-        socket.on('message #play', function (text, callback) {
-            socket.broadcast.emit('message', username, text);
+        socket.on('message #game', function (text, callback) {
+            socket.broadcast.emit('message #game', username, text);
             callback && callback();
         });
         
         socket.on('new challenge', function(enemyName, size) {
             //create game
-            games.push(createGame(username, enemyName, size));
+            games.push(createGame(username, enemyName, size, socket.id));
 
             var gameIndex = games.length - 1;
 
-            //find his id
-            var enemyId = getIdByUsername(io, enemyName);
-
+            var creatorId = socket.id;
+            
+            sendInviteToEnemy(io, enemyName, username, gameIndex, creatorId);
+            
             //send request
-            socket.to(enemyId).emit('game invite', username, games[gameIndex].room);
+            //cket.to(enemyId).emit('game invite', username, games[gameIndex].room);
         });
 
         socket.on('new game with any player', function (size) {    
             var gameIndex = isGameAvailible(size);
 
             if (gameIndex >= 0) {  //if such game is availible
-                games[gameIndex]["white"] = username;
-                var creator = getIdByUsername(io, games[gameIndex]["black"]);
+                games[gameIndex]["white"].name = username;
+                games[gameIndex]["white"].id = socket.id;
+//                var creator = getIdByUsername(io, games[gameIndex]["black"]);
+                var creator = games[gameIndex]["black"].id;
 
                 socket.to(creator).emit('start game', username, games[gameIndex].room);
-                socket.emit('start game', games[gameIndex]["black"], games[gameIndex].room);
+                socket.emit('start game', games[gameIndex]["black"].name, games[gameIndex].room);
             }
             else { //if not, create new game
-                games.push(createGame(username, 0, size));
+                games.push(createGame(username, 0, size, socket.id));
                 var gameIndex = games.length - 1;
 
                 socket.emit('searching');
@@ -343,33 +386,40 @@ module.exports = function (server) {
         });
 
         //wait answer. if yes, join game room; if no, delete game
-        socket.on('agreed', function (agreed, room) {
+        socket.on('agreed', function (agreed, room, creatorId) {
             var gameIndex = getGameIndex(room);
-            var creator = getIdByUsername(io, games[gameIndex]["black"]);
 
             if (agreed) {
-                socket.to(creator).emit('start game', username, room);
-                socket.emit('start game', games[gameIndex]["black"], room);
+                cancelOtherInvites(io, username, socket); 
+                
+                socket.to(creatorId).emit('start game', username, room);
+                socket.emit('start game', games[gameIndex]["black"].name, room);
             }
             else {
                 //emit client that user refused
-                socket.to(creator).emit('refused', username);
+                socket.to(creatorId).emit('refused', username);
                 //delete game
                 games.splice(gameIndex, 1);
             }
         });
-        
-        
-        
-        
+    
+    
+        //namespace: game. Handles game requests
         socket.on('start', function(room) {
-            console.log('start');
             var gameIndex = getGameIndex(room);
+            
+//            if(gameIndex < 0) throw new HttpError(400, "Такой игры не существует");
+            if(games[gameIndex]["black"].name === username) {
+                games[gameIndex]["black"].id = socket.id;     
+            }
+            else if(games[gameIndex]["white"]) {
+                games[gameIndex]["white"].id = socket.id;
+            }
             
             socket.join(games[gameIndex].room);
             
-            startGame(gameIndex, username, io, socket);
-            changeInfoText(gameIndex, socket);
+            io.in(games[gameIndex].room).emit('drawBoard', games[gameIndex].board);
+            changeInfoText(gameIndex, socket, username);
         });
 
         socket.on('move', function (mousePos, room) {
@@ -383,7 +433,6 @@ module.exports = function (server) {
                 makeMove(addingCoords, gameIndex, io, socket);
             }
         });
-
     });
 
 

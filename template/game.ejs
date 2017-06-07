@@ -3,166 +3,209 @@
 
 <script src="/vendor/bower_components/socket.io-client/dist/socket.io.js"></script>
 <script src="/js/main.js"></script>
-<link rel="stylesheet" href="/css/position.css"/>
+<link rel="stylesheet" href="/css/position.css" />
 
-<div id='info' class='status' style='display: none;' align='center'>
-  <p></p>
-  <button id='cancel' class="btn btn-primary player">Отмена</button>
+<div id='info' class='status' style='display: none;'>
+    <p></p>
 </div>
-
-<div align='center'>
-<h1 id='roomID'><%= room %></h1>
-<h4 id='move'></h4>
-<h4 id='yourScore'></h4>
-<h4 id='enemyScore'></h4>
-
-    <canvas id='canvas' class='ctx' width=700 height=700>Обновите браузер</canvas>
-
-    <button id = "pass">
-        <img src="/img/pass.png" alt="PASS" style="vertical-align: middle">
-    </button>
-
-    <button id = "resign">
-        <img src="/img/resign.png" alt="RESIGN" style="vertical-align: middle">
-    </button>
-</div>
-    
-<!--
-  <div id="room">
-    <ul></ul>
-    <form>
-      <input class="form-control" autocomplete="off" placeholder="Сообщение...">
-    </form>
-  </div>
--->
-
 
 <div id="overlay" style='display: none;'></div>
 
+<h1 id='roomID' style='display: none;'><%=room %></h1>
+
+
+<div class="container">
+    <div class="row">
+        <div id="I" class="col-sm-2">
+            <div class="player">
+                <img src="http://via.placeholder.com/140x140" style="padding-top: 10px;">
+                <p></p>
+            </div>
+            <h2 id="yourScore"></h2>
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-8">
+            <canvas id='canvas' class='ctx' width=700 height=700>Обновите браузер</canvas>
+
+            <button id="pass">
+                <img src="/img/pass.png" alt="PASS" style="vertical-align: middle">
+            </button>
+
+            <button id="resign">
+                <img src="/img/resign.png" alt="RESIGN" style="vertical-align: middle">
+            </button>
+        </div>
+
+        <div id="enemy" class="col-sm-2">
+            <div class="player">
+                <img src="http://via.placeholder.com/140x140" style="padding-top: 10px;">
+                <p></p>
+            </div>
+            <h2 id="enemyScore"></h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div id="room" class="col-sm-12">
+            <div id="gameMessages"></div>
+
+            <form>
+                <input class="form-control" autocomplete="off" placeholder="Сообщение...">
+            </form>
+        </div>
+    </div>
+</div>
+
+
 <script>
+    var overlay = $('#overlay');
+    var game = $('#game');
+    var messages = $('#gameMessages');
 
-  var overlay = $('#overlay');
-  var game = $('#game');
-
-  var input = $('#room input');
-  var ul = $('#room ul');
-  var form = $('#room form');
-  var canvas = document.getElementById('canvas');
+    var input = $('#room input');
+    var ul = $('#room ul');
+    var form = $('#room form');
+    var canvas = document.getElementById('canvas');
 
 
     var room = $('#roomID').text();
-    
-  listenClick(room);
-    
 
-  var socket = io();
-
-  socket
-      //chat events
-      .on('join', function() {
-        //smth
-      })
-      .on('connect', function() {
-//        printStatus("соединение установлено");
-//        form.on('submit', sendMessage);
-//        input.prop('disabled', false);
-        
-        socket.emit('start', room);
-      })
-      .on('disconnect', function() {
-        printStatus("соединение потеряно");
-        form.off('submit', sendMessage);
-        input.prop('disabled', true);
-        this.emit('error');
-      })
-      .on('logout', function() {
-        location.href = "/";
-      })
-      .on('error', function(reason) {
-        if (reason == "handshake unauthorized") {
-          printStatus("вы вышли из сайта");
-        } else {
-          setTimeout(function() {
-            socket.socket.connect();
-          }, 500);
-        }
-      })
+    listenClick(room);
 
 
-      //game events
+    var socket = io();
 
-      .on('change info text', function(move, yourScore, enemyScore) {
-        changeGameInfoText(move, yourScore, enemyScore);
-      })
-      .on('drawBoard', function(board) {
-        drawBoard(board);
-      })
-      .on('drawStone', function(addingCoords, stone, board, rules) {
-        drawStone(addingCoords, stone, board, rules);
-      })
-      .on('deleteStones', function(surroundedCoords, rules, board, stone) {
-        deleteStones(surroundedCoords, rules, board, stone);
-      })
-      .on('game over', function(result) {
-        overlay.show();
-        info.text(result);
-        info.show('slow');
+    socket
+        //chat events
+        .on('message #game', function(username, message) {
+            printMessage(username, message);
+        })
+        .on('join', function() {
+            //smth
+        })
+        .on('connect', function() {
+            printStatus("соединение установлено");
+            form.on('submit', sendMessage);
+            input.prop('disabled', false);
 
-        //location.href = "/play";
-      });
-
-  function changeGameInfoText(move, yourScore, enemyScore) {
-    var text;
-
-    if(move) text = "Ваш ход";
-    else text = "Ход противника";
-
-    var moveInfo = $('#move');
-    moveInfo.text(text);
-
-    var yourScoreInfo = $('#yourScore');
-    yourScoreInfo.text('Вас счет: ' + yourScore);
-
-    var enemyScoreInfo = $('#enemyScore');
-    enemyScoreInfo.text('Счет противника: ' + enemyScore);
-  }
-
-  function listenClick(room) {
-      canvas.addEventListener('click', function (event) {
-          var mousePos = getMousePos(event);
-
-          socket.emit('move', mousePos, room);
-      }, false);
-  }
-
-  function getMousePos() {
-      var rect = canvas.getBoundingClientRect();
-
-      return {
-          x: event.clientX - rect.left,
-          y: event.clientY - rect.top
-      };
-  }
+            socket.emit('start', room);
+        })
+        .on('disconnect', function() {
+            printStatus("соединение потеряно");
+            form.off('submit', sendMessage);
+            input.prop('disabled', true);
+            this.emit('error');
+        })
+        .on('logout', function() {
+            location.href = "/";
+        })
+        .on('error', function(reason) {
+            if (reason == "handshake unauthorized") {
+                printStatus("вы вышли из сайта");
+            } else {
+                setTimeout(function() {
+                    socket.socket.connect();
+                }, 500);
+            }
+        })
 
 
-  //chat functions
-  function sendMessage() {
-    var text = input.val();
+        //game events
 
-    socket.emit('message', text, function() {
-      printMessage("я: " + text);
-    });
+        .on('change info text', function(yourName, enemyName, move) {
+            changeInfoText(yourName, enemyName, move);
+        })
+        .on('change score text', function(yourScore, enemyScore) {
+            changeScoreText(yourScore, enemyScore);
+        })
+        .on('drawBoard', function(board) {
+            drawBoard(board);
+        })
+        .on('drawStone', function(addingCoords, stone, board, rules) {
+            drawStone(addingCoords, stone, board, rules);
+        })
+        .on('deleteStones', function(surroundedCoords, rules, board, stone) {
+            deleteStones(surroundedCoords, rules, board, stone);
+        })
+        .on('game over', function(result) {
+            overlay.show();
 
-    input.val('');
-    return false;
-  }
+            $('#info p').text(result);
+            $('#info').show();
 
-  function printStatus(status) {
-    $('<li>').append($('<i>').text(status)).appendTo(ul);
-  }
+            //location.href = "/play";
+        });
 
-  function printMessage(text) {
-    $('<li>').text(text).appendTo(ul);
-  }
+    function changeScoreText(yourScore, enemyScore) {
+        $('#I h2').text("Счет: " + yourScore);
+        $('#enemy h2').text("Счет: " + enemyScore);
+    }
+
+    function changeInfoText(yourName, enemyName, move) {
+        $('#I p').text(yourName);
+        $('#enemy p').text(enemyName);
+
+        var text;
+
+        if (move) text = "Ваш ход";
+        else text = "Ход противника";
+
+        $('#info p').text(text);
+        $('#info').show();
+        $('#overlay').show();
+
+        setTimeout(function() {
+            $('#info').hide();
+            $('#overlay').hide();
+        }, 3000);
+    }
+
+    function listenClick(room) {
+        canvas.addEventListener('click', function(event) {
+            var mousePos = getMousePos(event);
+
+            socket.emit('move', mousePos, room);
+        }, false);
+    }
+
+    function getMousePos() {
+        var rect = canvas.getBoundingClientRect();
+
+        return {
+            x: event.clientX - rect.left,
+            y: event.clientY - rect.top
+        };
+    }
+
+
+    //chat functions
+    function sendMessage() {
+        var text = input.val();
+
+        socket.emit('message #game', text, function() {
+            printMessage("я", text);
+        });
+
+        input.val('');
+        return false;
+    }
+
+    function printStatus(status) {
+        var newMessage = $('<div class="message statusMessage"></div>');
+
+        newMessage.text(status).appendTo(messages);
+    }
+
+    function printMessage(username, text) {
+        var newMessage = $('<div class="message"></div>');
+
+        $('<div class="sender"></div>').text(username + ':').appendTo(newMessage);
+        $('<div></div>').text(text).appendTo(newMessage);
+
+
+        newMessage.appendTo(messages);
+
+        messages.scrollTop(messages[0].scrollHeight);
+    }
 
 </script>

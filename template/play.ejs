@@ -1,67 +1,79 @@
 <% layout('layout/page') -%>
-<% block('title', "Game") -%>
+<% block('title', "Play") -%>
 
 <script src="/vendor/bower_components/socket.io-client/dist/socket.io.js"></script>
 <script src="/js/main.js"></script>
-<link rel="stylesheet" href="/css/position.css" />
-
-<div id='gameSettings'>
-    <div id='player'>
-        <p>Выберите соперника</p>
-        <button id='any' class="btn btn-primary player" onclick="chooseGameSettings(this)">Любой игрок</button>
-        <p></p>
-        <ul id='onlineList'></ul>
-    </div>
-
-    <div id='size' align='center'>
-        <p>Выберите размер поля</p>
-        <button id="5" class="btn btn-primary size" onclick="chooseGameSettings(this)">5x5</button>
-        <button id="7" class="btn btn-primary size" onclick="chooseGameSettings(this)">7x7</button>
-        <button id="9" class="btn btn-primary size" onclick="chooseGameSettings(this)">9x9</button>
-        <button id="11" class="btn btn-primary size" onclick="chooseGameSettings(this)">11x11</button>
-        <button id="13" class="btn btn-primary size" onclick="chooseGameSettings(this)">13x13</button>
-        <button id="15" class="btn btn-primary size" onclick="chooseGameSettings(this)">15x15</button>
-        <button id="17" class="btn btn-primary size" onclick="chooseGameSettings(this)">17x17</button>
-        <button id="19" class="btn btn-primary size" onclick="chooseGameSettings(this)">19x19</button>
-    </div>
-
-    <div id='choice' align='center'></div>
-</div>
+<link rel="stylesheet" href="/css/position.css"/>
 
 
-<div id='info' class='status' style='display: none;' align='center'>
+<div id='info' class='status' style='display: none;'>
     <p></p>
-    <button id='cancel' class="btn btn-primary player">Отмена</button>
+    <button id='cancel' class="btn btn-primary">Отмена</button>
 </div>
 
-<div id='invite' class='status' style='display: none;' align='center'>
+<div id='invite' class='status' style='display: none;'>
     <p></p>
-    <button id='agreed' class="btn btn-primary player">Принять</button>
-    <button id='refused' class="btn btn-primary player">Отказаться</button>
+    <button id='agreed' class="btn btn-primary">Принять</button>
+    <button id='refused' class="btn btn-primary">Отказаться</button>
 </div>
 
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6" id='player'>
+            <p>Выберите соперника</p>
+                
+            <div class="container">
+                <div class="row" id="test"></div>
+            </div>
+        </div>
+
+        <div class="col-sm-6" id='size'>
+            <p>Выберите размер поля</p>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="size" id="3" onclick="chooseGameSettings(this)">3x3</div>
+                        <div class="size" id="5" onclick="chooseGameSettings(this)">5x5</div>
+                        <div class="size" id="6" onclick="chooseGameSettings(this)">6x6</div>
+                        <div class="size" id="7" onclick="chooseGameSettings(this)">7x7</div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="size" id="9" onclick="chooseGameSettings(this)">9x9</div>
+                        <div class="size" id="11" onclick="chooseGameSettings(this)">11x11</div>
+                        <div class="size" id="13" onclick="chooseGameSettings(this)">13x13</div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="size" id="15" onclick="chooseGameSettings(this)">15x15</div>
+                        <div class="size" id="17" onclick="chooseGameSettings(this)">17x17</div>
+                        <div class="size" id="19" onclick="chooseGameSettings(this)">19x19</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div id="overlay" style='display: none;'></div>
 
 <script>
     var gameSettings = $('#gameSettings');
     var search = $('#search');
-    var online = $('#onlineList');
+    var online = $('#test');
+    var invite = $('#invite');
     var overlay = $('#overlay');
     var info = $('#info');
-
-    var canvas = document.getElementById('canvas');
 
     var socket = io();
 
     socket
         //chat events
-        .on('join', function(username, onlineListNames) {
-            online.empty();
-            console.log(onlineListNames);
-            onlineListNames.forEach(function(username) {
-                $('<li class="online" onclick="choosePlayer(this)">').text(username).appendTo(online);
-            });
+        .on('join', function() {
+            socket.emit('get online list');
+        })
+        .on('leave', function() {
+            socket.emit('get online list');
         })
         .on('connect', function() {
 //            printStatus("соединение установлено");
@@ -89,9 +101,25 @@
 
 
         .on('online list', function(onlineListNames) {
+            online.empty();
+        
+//            for(var i = 0; i < 20; i++) {
+            var newOnlinePlayer = $('<div class="col-sm-4"></div>').appendTo('#test');
+            var any = $('<div id="any" class="player" onclick="chooseGameSettings(this)"></div>').appendTo(newOnlinePlayer);
+
+            $('<img src="http://via.placeholder.com/140x140" style="padding-top: 10px;">').appendTo(any);
+            $('<p></p>').text("Любой").appendTo(any);
+//            }
+        
+        
             onlineListNames.forEach(function(username) {
-                $('<li class="online player" onclick="chooseGameSettings(this)">').text(username).appendTo(online);
+                var newOnlinePlayer = $('<div class="col-sm-4"></div>').appendTo('#test');
+                var current = $('<div class="player online" onclick="chooseGameSettings(this)"></div>').appendTo(newOnlinePlayer);
+                
+                $('<img src="http://via.placeholder.com/140x140" style="padding-top: 10px;">').appendTo(current);
+                $('<p></p>').text(username).appendTo(current);
             });
+        
         })
 
 
@@ -107,24 +135,27 @@
             });
         })
         //incoming invite to play
-        .on('game invite', function(from, room) {
-            var invite = $('#invite');
+        .on('game invite', function(from, room, creatorId) {
 
             $('#invite p').text(from + ' приглашает вас в игру. Принять вызов?');
             invite.show();
             overlay.show();
 
             $('#agreed').click(function() {
-                socket.emit('agreed', true, room);
+                socket.emit('agreed', true, room, creatorId);
                 invite.hide();
                 overlay.hide();
             });
 
             $('#refused').click(function() {
-                socket.emit('agreed', false, room);
+                socket.emit('agreed', false, room, creatorId);
                 invite.hide();
                 overlay.hide();
             });
+        })
+        .on('cancel invite', function() {
+            invite.hide();
+            overlay.hide();
         })
 
         .on('searching', function() {
@@ -159,6 +190,7 @@
     var size = null;
 
     function chooseGameSettings(element) {
+        
         if ($(element).hasClass("player")) {
             enemyName = choosePlayer(element);
         } else if ($(element).hasClass("size")) {
@@ -166,38 +198,42 @@
         }
 
         if (enemyName && size) {
+            if (enemyName == ' ') socket.emit('new game with any player', size);
+            else socket.emit('new challenge', enemyName, size);
+            
+            enemyName = null;
+            size = null;
+            $(".active").toggleClass("active");
+            
             overlay.show();
             $('#info p').text('Ждем ответа от соперника');
             info.show('slow');
 
             $('#cancel').click(function() {
-                //emit cancel event. delete game
+                //emit cancel event. delete game DO IT
                 info.hide('slow');
                 overlay.hide();
             });
-
-            if (enemyName == ' ') socket.emit('new game with any player', size);
-            else socket.emit('new challenge', enemyName, size);
         }
     }
 
     function choosePlayer(element) {
-        var choice = $('#choice');
-
+        $("#player .active").toggleClass("active");
+        $(element).addClass("active");
+        
         if (element.id == 'any') {
-            choice.prepend('<p>Игрок: любой</p>');
             return ' ';
         } else if ($(element).hasClass("online")) {
-            choice.prepend('<p>Игрок: ' + $(element).text() + '</p>');
-            return $(element).text();
+            return $(element).last().text();
         }
     }
 
     function chooseSize(element) {
         var size = +element.id;
         var choice = $('#choice');
-
-        choice.append('Размер поля: ' + size + 'x' + size);
+        
+        $("#size .active").toggleClass("active");
+        $(element).addClass("active");
 
         return size;
     }
