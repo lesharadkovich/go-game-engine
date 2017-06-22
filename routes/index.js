@@ -1,4 +1,5 @@
 var checkAuth = require('../middleware/checkAuth.js');
+var checkGame = require('../middleware/checkGame.js');
 
 module.exports = function (app) {
 
@@ -11,10 +12,11 @@ module.exports = function (app) {
 
     app.get('/play', checkAuth, require('./play').get);
 
-    app.get('/game/:room', checkAuth, require('./game').get);
+    app.get('/game/:room', checkAuth, checkGame, require('./game').get);
 
     app.get('/chat', checkAuth, require('./chat').get);
 
     app.get('/rating', require('./rating').get);
+    app.get('/gamesList', require('./gamesList').get);
 
 };

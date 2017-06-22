@@ -1,0 +1,19 @@
+<% layout('layout/page') -%>
+<% block('title', "Рейтинг") -%>
+
+
+<table align='center' width=1000>
+   <tr>
+    <th>ID</th>
+    <th>Player 1</th>
+    <th>Player 2</th>
+   </tr>
+ 
+   <% gamesList.forEach(function(current) { %>
+        <tr>
+            <td><%=current.room%></td>
+            <td><%=current["black"].name%></td>
+            <td><%=current["white"].name%></td>
+        </tr>
+    <% }); %>
+</table>

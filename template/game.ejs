@@ -7,6 +7,7 @@
 
 <div id='info' class='status' style='display: none;'>
     <p></p>
+    <button class="btn btn-primary">Выход</button>
 </div>
 
 <div id="overlay" style='display: none;'></div>
@@ -133,7 +134,9 @@
             $('#info p').text(result);
             $('#info').show();
 
-            //location.href = "/play";
+            $('#info button').click(function() {
+                location.href = "/play";
+            });
         });
 
     function changeScoreText(yourScore, enemyScore) {
