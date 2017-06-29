@@ -7,6 +7,7 @@
 
 <div id='info' class='status' style='display: none;'>
     <p></p>
+    <div id="quit" class="btn btn-primary">Выход</div>
 </div>
 
 <div id="overlay" style='display: none;'></div>
@@ -94,7 +95,7 @@
             printStatus("соединение потеряно");
             form.off('submit', sendMessage);
             input.prop('disabled', true);
-            this.emit('error');
+            // this.emit('error');
         })
         .on('logout', function() {
             location.href = "/";
@@ -133,7 +134,10 @@
             $('#info p').text(result);
             $('#info').show();
 
-            //location.href = "/play";
+            $('#quit').click(function() {
+                location.href = "/play";
+            });
+
         });
 
     function changeScoreText(yourScore, enemyScore) {

@@ -2,7 +2,6 @@
 <% block('title', "Play") -%>
 
 <script src="/vendor/bower_components/socket.io-client/dist/socket.io.js"></script>
-<script src="/js/main.js"></script>
 <link rel="stylesheet" href="/css/position.css"/>
 
 
@@ -34,7 +33,6 @@
             <div class="container">
                 <div class="row">
                     <div class="col-sm-4">
-                        <div class="size" id="3" onclick="chooseGameSettings(this)">3x3</div>
                         <div class="size" id="5" onclick="chooseGameSettings(this)">5x5</div>
                         <div class="size" id="6" onclick="chooseGameSettings(this)">6x6</div>
                         <div class="size" id="7" onclick="chooseGameSettings(this)">7x7</div>
@@ -103,13 +101,11 @@
         .on('online list', function(onlineListNames) {
             online.empty();
         
-//            for(var i = 0; i < 20; i++) {
             var newOnlinePlayer = $('<div class="col-sm-4"></div>').appendTo('#test');
             var any = $('<div id="any" class="player" onclick="chooseGameSettings(this)"></div>').appendTo(newOnlinePlayer);
 
             $('<img src="http://via.placeholder.com/140x140" style="padding-top: 10px;">').appendTo(any);
             $('<p></p>').text("Любой").appendTo(any);
-//            }
         
         
             onlineListNames.forEach(function(username) {

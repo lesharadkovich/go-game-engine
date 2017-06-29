@@ -61,21 +61,22 @@ function deleteStones(surroundedCoords, game, board, stone) {
             deleteCoords(surrounded, board, enemyColor, stone, game);
         }
     }
+
+    console.log(board.stoneCoords["black"]);
+    console.log(board.stoneCoords["white"]);
 }
 
 function deleteCoords(surrounded, board, enemyColor, stone, game) {
+
     for (var i = 0; i < board.stoneCoords[enemyColor].length; i++) {
         for (var j = 0; j < board.stoneCoords[enemyColor][i].length; j++) {
             var current = board.stoneCoords[enemyColor][i][j];
 
             if (surrounded.x === current.x && surrounded.y === current.y) {
-                //painter.deleteStone(current, stone, board);
                 eraseStones(current, stone, board);
                 board.stoneCoords[enemyColor][i].splice(j, 1);
 
                 board.deletedCoords.push(current);
-
-                //game.score[game.currentPlayerColor]++;
                 return;
             }
         }

@@ -78,7 +78,7 @@
             printStatus("соединение потеряно");
             form.off('submit', sendMessage);
             input.prop('disabled', true);
-            this.emit('error');
+            // this.emit('error');
         })
         .on('logout', function() {
             location.href = "/";
