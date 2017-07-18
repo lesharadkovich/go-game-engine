@@ -5,8 +5,39 @@
     background-repeat: no-repeat;
 }*/
 body {
-    background-color: lightblue;
+    background-color: lemonchiffon;
 }
+#about {
+    font-size: 1.7em;
+    font-weight: bold;
+    text-align: center;
+}
+.play {
+    margin-top: 100px;
+    margin-bottom: 100px;
+    font-size: 1.7em;
+    width: 40%;
+    border: 2px solid #33aace;
+    background-color: #33aace;
+}
+.play:hover {
+    cursor: pointer;
+    /*color: lightblue;*/
+    background-color: #7cc9e0;
+	transition: 0.5s;
+}
+.play p {
+    margin: 20px;
+}
+#image {
+    background-image: url(../img/1.jpg);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    /*width: 600px;*/
+    height: 500px;
+    /*float: left;*/
+}
+
 .status {
     position: fixed;
     margin: 20%;

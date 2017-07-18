@@ -1,9 +1,33 @@
 <% layout('layout/page') -%>
-<% block('title', 'Привет ≥︺‿︺≤'); -%>
+<% block('title', 'Главная'); -%>
 
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12" align="center">
+            <!<img src="/img/1.jpg" alt="1" style="vertical-align: middle">
 
-<% if (user) { %>
-    <p class="lead">Привет, <%=user.username%>!</p>
-<% } else { %>
-    <p class="lead">Всем привет!</p>
-<% } %>
+            <div id="image"></div>
+
+            <p id="about">
+            Го — логическая настольная игра с глубоким стратегическим содержанием, возникшая в Древнем Китае, по разным оценкам, от 2 до 5 тысяч лет назад. По общему числу игроков — одна из самых распространённых настольных игр в мире. Го – самая сложная и последняя «человечная» игра на планете! Игра образов и ассоциаций, игра которая не подчиняется суперкомпьютеру! Игра, которую шахматные чемпионы называют космической и даже игрой третьего тысячелетия.
+            </p>
+
+            <% if (user) { %>
+                <div class="play" onclick="redirect('/play');">
+                    <p>Играть сейчас!</p>
+                </div>
+            <% } else { %>
+                <div class="play" onclick="redirect('/login');">
+                    <p>Войти или зарегестрироваться</p>
+                </div>
+            <% } %>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function redirect(link) {
+        location.href = link;
+    }
+</script>
