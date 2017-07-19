@@ -114,7 +114,7 @@ module.exports = function (server) {
         return this;
     };
 
-    io.set('origins', 'http://localhost:*');
+    // io.set('origins', 'http://localhost:*');
     io.set('logger', log);
 
     io.use(function (socket, next) {
