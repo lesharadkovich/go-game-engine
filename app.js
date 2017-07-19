@@ -63,8 +63,10 @@ app.use(function(err, req, res, next) {
 });
 
 
+var port = process.env.PORT || config.get('port');
+
 var server = http.createServer(app);
-server.listen(config.get('port'), function(){
+server.listen(port, function(){
   console.log('Express server listening on port ' + config.get('port'));
 });
 
