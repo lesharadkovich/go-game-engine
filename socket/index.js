@@ -198,13 +198,9 @@ module.exports = function (server) {
             var game = new Game(username, enemyName, size, creatorId);
             games.push(game);
 
-            // var gameIndex = games.length - 1;
-
+            socket.emit('waiting', 'Ждем ответа от соперника', game.room);
             
             sendInviteToEnemy(io, enemyName, username, game, creatorId);
-            
-            //send request
-            //cket.to(enemyId).emit('game invite', username, games[gameIndex].room);
         });
 
         socket.on('new game with any player', function (size) {    
@@ -214,7 +210,7 @@ module.exports = function (server) {
                 var game = new Game(username, 0, size, socket.id);
                 games.push(game);
 
-                socket.emit('searching');
+                socket.emit('waiting', 'Поиск подходящего противника', game.room);
             }
             else {  //if such game is availible
                 game["white"].name = username;
@@ -243,6 +239,13 @@ module.exports = function (server) {
                 //delete game
                 games.splice(gameIndex, 1);
             }
+        });
+
+        socket.on('cancel', function(room) {
+            var gameIndex = Games.getGameIndex(room);
+            //delete game
+            games.splice(gameIndex, 1);
+
         });
     
     

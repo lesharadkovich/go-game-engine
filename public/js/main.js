@@ -58,12 +58,10 @@ function deleteStones(surroundedCoords, game, board, stone) {
         for (var j = 0; j < surroundedCoords[i].length; j++) {
             var surrounded = surroundedCoords[i][j];
 
-            deleteCoords(surrounded, board, enemyColor, stone, game);
+            // deleteCoords(surrounded, board, enemyColor, stone, game);
+            eraseStones(surrounded, stone, board);
         }
     }
-
-    console.log(board.stoneCoords["black"]);
-    console.log(board.stoneCoords["white"]);
 }
 
 function deleteCoords(surrounded, board, enemyColor, stone, game) {
@@ -74,9 +72,7 @@ function deleteCoords(surrounded, board, enemyColor, stone, game) {
 
             if (surrounded.x === current.x && surrounded.y === current.y) {
                 eraseStones(current, stone, board);
-                board.stoneCoords[enemyColor][i].splice(j, 1);
 
-                board.deletedCoords.push(current);
                 return;
             }
         }

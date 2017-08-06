@@ -149,19 +149,21 @@
                 overlay.hide();
             });
         })
+        
         .on('cancel invite', function() {
             invite.hide();
             overlay.hide();
         })
 
-        .on('searching', function() {
-            //gameSettings.hide('slow');
+        .on('waiting', function(infoText, room) {
             overlay.show();
-            $('#info p').text('Поиск подходящего противника');
+            $('#info p').text(infoText);
             info.show('slow');
 
             $('#cancel').click(function() {
                 //emit cancel event. delete game
+                socket.emit('cancel', room);
+
                 info.hide('slow');
                 overlay.hide();
             });
@@ -194,22 +196,13 @@
         }
 
         if (enemyName && size) {
-            if (enemyName == ' ') socket.emit('new game with any player', size);
-            else socket.emit('new challenge', enemyName, size);
-            
             enemyName = null;
             size = null;
             $(".active").toggleClass("active");
-            
-            overlay.show();
-            $('#info p').text('Ждем ответа от соперника');
-            info.show('slow');
 
-            $('#cancel').click(function() {
-                //emit cancel event. delete game DO IT
-                info.hide('slow');
-                overlay.hide();
-            });
+
+            if (enemyName == ' ') socket.emit('new game with any player', size);
+            else socket.emit('new challenge', enemyName, size);
         }
     }
 

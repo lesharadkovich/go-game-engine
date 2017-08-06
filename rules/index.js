@@ -159,12 +159,20 @@ module.exports = class Rules {
             this.checkSides(currentStone, surroundedCoords, board, indexOfCluster, maxX, maxY);
         }
 
-        return surroundedCoords;
 
         //delete surrounded coords
         var enemyColor = this.color[color];
         this.isSurroundedCoordsExist(surroundedCoords, board, enemyColor);
-        this.deleteCoords(surroundedCoords, board, enemyColor);
+
+        for (var i = 0; i < surroundedCoords.length; i++) {
+            for (var j = 0; j < surroundedCoords[i].length; j++) {
+                var surrounded = surroundedCoords[i][j];
+
+                this.deleteCoords(surrounded, board, enemyColor);
+            }
+        }
+        
+        return surroundedCoords;
 
     }
 
@@ -306,16 +314,15 @@ module.exports = class Rules {
     //deletes surrounded existing coords
     deleteCoords(surrounded, board, enemyColor) {
         for (var i = 0; i < board.stoneCoords[enemyColor].length; i++) {
-            //if(i === index) continue; //???????????
-
             for (var j = 0; j < board.stoneCoords[enemyColor][i].length; j++) {
                 var current = board.stoneCoords[enemyColor][i][j];
 
                 if (surrounded.x === current.x && surrounded.y === current.y) {
-                    console.log("hey");
+                    // console.log("hey");
                     // painter.deleteStone(current, stone, board);
                     // var deleted = board.stoneCoords[enemyColor][i].splice(j, 1);
-                    console.log(deleted);
+                    // console.log(deleted);
+                    board.stoneCoords[enemyColor][i].splice(j, 1);
 
                     board.deletedCoords.push(current);
 
