@@ -85,11 +85,12 @@
             //smth
         })
         .on('connect', function() {
+            console.log('start');
+            socket.emit('start', room);
+
             printStatus("соединение установлено");
             form.on('submit', sendMessage);
             input.prop('disabled', false);
-
-            socket.emit('start', room);
         })
         .on('disconnect', function() {
             printStatus("соединение потеряно");

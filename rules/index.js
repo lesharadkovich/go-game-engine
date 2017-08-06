@@ -318,10 +318,6 @@ module.exports = class Rules {
                 var current = board.stoneCoords[enemyColor][i][j];
 
                 if (surrounded.x === current.x && surrounded.y === current.y) {
-                    // console.log("hey");
-                    // painter.deleteStone(current, stone, board);
-                    // var deleted = board.stoneCoords[enemyColor][i].splice(j, 1);
-                    // console.log(deleted);
                     board.stoneCoords[enemyColor][i].splice(j, 1);
 
                     board.deletedCoords.push(current);

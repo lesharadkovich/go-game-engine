@@ -238,6 +238,7 @@ module.exports = function (server) {
                 socket.to(creatorId).emit('refused', username);
                 //delete game
                 games.splice(gameIndex, 1);
+                console.log(games);
             }
         });
 
@@ -246,6 +247,7 @@ module.exports = function (server) {
             //delete game
             games.splice(gameIndex, 1);
 
+            console.log(games);
         });
     
     

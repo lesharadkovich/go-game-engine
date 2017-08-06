@@ -149,7 +149,7 @@
                 overlay.hide();
             });
         })
-        
+
         .on('cancel invite', function() {
             invite.hide();
             overlay.hide();
@@ -196,13 +196,12 @@
         }
 
         if (enemyName && size) {
+            if (enemyName == ' ') socket.emit('new game with any player', size);
+            else socket.emit('new challenge', enemyName, size);
+
             enemyName = null;
             size = null;
             $(".active").toggleClass("active");
-
-
-            if (enemyName == ' ') socket.emit('new game with any player', size);
-            else socket.emit('new challenge', enemyName, size);
         }
     }
 
