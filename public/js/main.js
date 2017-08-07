@@ -51,17 +51,14 @@ function drawStone(addingCoords, stone, board, game) {
     }
 }
 
-function deleteCoords(surrounded, board, enemyColor, stone, game) {
+function deleteStones(surroundedCoords, game, board, stone) {
+    var enemyColor = game.color[game.currentPlayerColor];
 
-    for (var i = 0; i < board.stoneCoords[enemyColor].length; i++) {
-        for (var j = 0; j < board.stoneCoords[enemyColor][i].length; j++) {
-            var current = board.stoneCoords[enemyColor][i][j];
+    for (var i = 0; i < surroundedCoords.length; i++) {
+        for (var j = 0; j < surroundedCoords[i].length; j++) {
+            var surrounded = surroundedCoords[i][j];
 
-            if (surrounded.x === current.x && surrounded.y === current.y) {
-                eraseStones(current, stone, board);
-
-                return;
-            }
+            eraseStones(surrounded, stone, board);
         }
     }
 }

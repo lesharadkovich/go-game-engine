@@ -41,8 +41,7 @@ class Game {
     isYourMove(username) {
         var currentMove = this.rules.currentPlayerColor;
 
-        if (username === this[currentMove].name) return true;
-        else return false;
+        return username === this[currentMove].name;
     }
 
     makeMove(addingCoords, io, socket) {
