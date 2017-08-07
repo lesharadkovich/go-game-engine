@@ -118,7 +118,7 @@ class Game {
     }
 
     //
-    changeInfoText(socket, username) {
+    setInfoText(socket, username) {
         if (username === this["black"].name) {
             var yourColor = "black";
             var enemyColor = "white";
@@ -135,8 +135,7 @@ class Game {
         var yourName = this[yourColor].name;
         var enemyName = this[enemyColor].name;
 
-        socket.emit('change score text', yourScore, enemyScore);
-        socket.emit('change info text', yourName, enemyName, move);
+        socket.emit('set info text', yourName, enemyName, yourScore, enemyScore, move);
     }
 }
 

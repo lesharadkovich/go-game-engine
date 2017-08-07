@@ -262,7 +262,7 @@ module.exports = function (server) {
             socket.join(game.room);
             
             socket.emit('drawBoard', game.board);
-            game.changeInfoText(socket, username);
+            game.setInfoText(socket, username);
         });
 
         socket.on('move', function (mousePos, room) {

@@ -113,8 +113,8 @@
 
         //game events
 
-        .on('change info text', function(yourName, enemyName, move) {
-            changeInfoText(yourName, enemyName, move);
+        .on('set info text', function(yourName, enemyName, yourScore, enemyScore, move) {
+            setInfoText(yourName, enemyName, yourScore, enemyScore, move);
         })
         .on('change score text', function(yourScore, enemyScore) {
             changeScoreText(yourScore, enemyScore);
@@ -148,10 +148,13 @@
         $("#enemy .player").toggleClass("active");
     }
 
-    function changeInfoText(yourName, enemyName, move) {
+    function setInfoText(yourName, enemyName, yourScore, enemyScore, move) {
         $('#I p').text(yourName);
         $('#enemy p').text(enemyName);
 
+        $('#I h2').text("Счет: " + yourScore);
+        $('#enemy h2').text("Счет: " + enemyScore);
+        
         if (move) $('#I .player').addClass("active");
         else $('#enemy .player').addClass("active");
     }
