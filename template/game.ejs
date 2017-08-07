@@ -144,8 +144,8 @@
         $('#I h2').text("Счет: " + yourScore);
         $('#enemy h2').text("Счет: " + enemyScore);
 
-        $("#I .player .active").toggleClass("active");
-        $("#enemy .player .active").toggleClass("active");
+        $("#I .player").toggleClass("active");
+        $("#enemy .player").toggleClass("active");
     }
 
     function changeInfoText(yourName, enemyName, move) {
