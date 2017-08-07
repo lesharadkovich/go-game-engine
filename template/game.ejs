@@ -144,7 +144,8 @@
         $('#I h2').text("Счет: " + yourScore);
         $('#enemy h2').text("Счет: " + enemyScore);
 
-        $(".player .active").toggleClass("active");
+        $("#I .player .active").toggleClass("active");
+        $("#enemy .player .active").toggleClass("active");
     }
 
     function changeInfoText(yourName, enemyName, move) {
@@ -153,20 +154,6 @@
 
         if (move) $('#I .player').addClass("active");
         else $('#enemy .player').addClass("active");
-
-        // var text;
-
-        // if (move) text = "Ваш ход";
-        // else text = "Ход противника";
-
-        // $('#info p').text(text);
-        // $('#info').show();
-        // $('#overlay').show();
-
-        // setTimeout(function() {
-        //     $('#info').hide();
-        //     $('#overlay').hide();
-        // }, 3000);
     }
 
     function listenClick(room) {

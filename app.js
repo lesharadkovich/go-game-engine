@@ -67,7 +67,7 @@ var port = process.env.PORT || config.get('port');
 
 var server = http.createServer(app);
 server.listen(port, function(){
-  console.log('Express server listening on port ' + config.get('port'));
+  console.log('Express server listening on port ' + port);
 });
 
 var io = require('./socket')(server);
