@@ -104,7 +104,7 @@
             var newOnlinePlayer = $('<div class="col-sm-4"></div>').appendTo('#test');
             var any = $('<div id="any" class="player" onclick="chooseGameSettings(this)"></div>').appendTo(newOnlinePlayer);
 
-            $('<img src="http://via.placeholder.com/140x140" style="padding-top: 10px;">').appendTo(any);
+            $('<img src="/img/user_image.jpg" style="padding-top: 10px;">').appendTo(any);
             $('<p></p>').text("Любой").appendTo(any);
         
         
@@ -112,7 +112,8 @@
                 var newOnlinePlayer = $('<div class="col-sm-4"></div>').appendTo('#test');
                 var current = $('<div class="player online" onclick="chooseGameSettings(this)"></div>').appendTo(newOnlinePlayer);
                 
-                $('<img src="http://via.placeholder.com/140x140" style="padding-top: 10px;">').appendTo(current);
+                // $('<img src="http://via.placeholder.com/140x140" style="padding-top: 10px;">').appendTo(current);
+                $('<img src="/img/user_image.jpg" style="padding-top: 10px;">').appendTo(current);
                 $('<p></p>').text(username).appendTo(current);
             });
         

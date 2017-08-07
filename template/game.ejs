@@ -19,7 +19,7 @@
     <div class="row">
         <div id="I" class="col-sm-2">
             <div class="player">
-                <img src="http://via.placeholder.com/140x140" style="padding-top: 10px;">
+                <img src="/img/user_image.jpg" style="padding-top: 10px;">
                 <p></p>
             </div>
             <h2 id="yourScore"></h2>
@@ -39,7 +39,7 @@
 
         <div id="enemy" class="col-sm-2">
             <div class="player">
-                <img src="http://via.placeholder.com/140x140" style="padding-top: 10px;">
+                <img src="/img/user_image.jpg" style="padding-top: 10px;">
                 <p></p>
             </div>
             <h2 id="enemyScore"></h2>
@@ -85,7 +85,6 @@
             //smth
         })
         .on('connect', function() {
-            console.log('start');
             socket.emit('start', room);
 
             printStatus("соединение установлено");
@@ -144,25 +143,30 @@
     function changeScoreText(yourScore, enemyScore) {
         $('#I h2').text("Счет: " + yourScore);
         $('#enemy h2').text("Счет: " + enemyScore);
+
+        $(".player .active").toggleClass("active");
     }
 
     function changeInfoText(yourName, enemyName, move) {
         $('#I p').text(yourName);
         $('#enemy p').text(enemyName);
 
-        var text;
+        if (move) $('#I .player').addClass("active");
+        else $('#enemy .player').addClass("active");
 
-        if (move) text = "Ваш ход";
-        else text = "Ход противника";
+        // var text;
 
-        $('#info p').text(text);
-        $('#info').show();
-        $('#overlay').show();
+        // if (move) text = "Ваш ход";
+        // else text = "Ход противника";
 
-        setTimeout(function() {
-            $('#info').hide();
-            $('#overlay').hide();
-        }, 3000);
+        // $('#info p').text(text);
+        // $('#info').show();
+        // $('#overlay').show();
+
+        // setTimeout(function() {
+        //     $('#info').hide();
+        //     $('#overlay').hide();
+        // }, 3000);
     }
 
     function listenClick(room) {

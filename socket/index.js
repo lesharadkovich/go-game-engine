@@ -238,7 +238,6 @@ module.exports = function (server) {
                 socket.to(creatorId).emit('refused', username);
                 //delete game
                 games.splice(gameIndex, 1);
-                console.log(games);
             }
         });
 
@@ -246,13 +245,11 @@ module.exports = function (server) {
             var gameIndex = Games.getGameIndex(room);
             //delete game
             games.splice(gameIndex, 1);
-
-            console.log(games);
         });
-    
     
         //namespace: game. Handles game requests
         socket.on('start', function(room) {
+            console.log('start');
             var game = Games.getGameByRoom(room);
             
             if(game["black"].name === username) {
@@ -264,7 +261,7 @@ module.exports = function (server) {
             
             socket.join(game.room);
             
-            io.in(game.room).emit('drawBoard', game.board);
+            socket.emit('drawBoard', game.board);
             game.changeInfoText(socket, username);
         });
 

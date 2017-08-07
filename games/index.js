@@ -86,7 +86,6 @@ class Game {
 
         this[yourColor].score += surroundedCoords.length;
 
-        //changeInfoText(thisIndex, socket);
         var yourScore = this[yourColor].score;
         var enemyScore = this[enemyColor].score;
         socket.broadcast.to(this.room).emit('change score text', enemyScore, yourScore);
