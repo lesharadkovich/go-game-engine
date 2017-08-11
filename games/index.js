@@ -81,7 +81,7 @@ class Game {
             for (var j = 0; j < surroundedCoords[i].length; j++) {
                 var surrounded = surroundedCoords[i][j];
 
-                this.rules.deleteCoords(surrounded, board, enemyColor);
+                this.rules.deleteCoords(surrounded, this.board, enemyColor);
             }
         }
 
