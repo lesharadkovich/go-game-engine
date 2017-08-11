@@ -273,7 +273,9 @@ module.exports = function (server) {
 
             var addingCoords = game.stone.getPointCoords(game.board, mousePos);
 
-            if (addingCoords && !game.board.isStoneExists(addingCoords)) {
+            //TODO: check if stone is already deleted
+            if (addingCoords && !game.board.isStoneExists(addingCoords)
+                             && !game.board.isStoneDeleted(addingCoords)) {
                 game.makeMove(addingCoords, io, socket);
             }
         });

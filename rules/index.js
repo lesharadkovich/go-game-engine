@@ -163,14 +163,6 @@ module.exports = class Rules {
         //delete surrounded coords
         var enemyColor = this.color[color];
         this.isSurroundedCoordsExist(surroundedCoords, board, enemyColor);
-
-        for (var i = 0; i < surroundedCoords.length; i++) {
-            for (var j = 0; j < surroundedCoords[i].length; j++) {
-                var surrounded = surroundedCoords[i][j];
-
-                this.deleteCoords(surrounded, board, enemyColor);
-            }
-        }
         
         return surroundedCoords;
 

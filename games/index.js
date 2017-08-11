@@ -75,7 +75,15 @@ class Game {
     deleteStones(indexOfCluster, io, socket) {
         //find surrounded coords
         var surroundedCoords = this.rules.checkClosure(this.board, indexOfCluster);
-        //delete coords!!!
+
+        //delete coords
+        for (var i = 0; i < surroundedCoords.length; i++) {
+            for (var j = 0; j < surroundedCoords[i].length; j++) {
+                var surrounded = surroundedCoords[i][j];
+
+                this.rules.deleteCoords(surrounded, board, enemyColor);
+            }
+        }
 
         //delete stones
         io.in(this.room).emit('deleteStones', surroundedCoords, this.rules, this.board, this.stone);

@@ -7,7 +7,12 @@
   },
   "dependencies": {
     "express": "3.3.8",
-    "ejs": "*"
+    "ejs": "*",
+    "ejs-locals": "*",
+    "mongoose": "4.10.7",
+    "nconf": "0.8.4",
+    "socket.io": "2.0.1",
+    "winston": "2.3.1" 
   },
   "devDependencies": {
     "mocha": "1.7.0",

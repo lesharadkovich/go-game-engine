@@ -1,6 +1,22 @@
 <% layout('layout/page') -%>
 <% block('title', 'Главная'); -%>
 
+<script src="/vendor/bower_components/socket.io-client/dist/socket.io.js"></script>
+
+<div id='info' class='status' style='display: none;'>
+    <p></p>
+    <button id='cancel' class="btn btn-primary">Отмена</button>
+</div>
+
+<div id='invite' class='status' style='display: none;'>
+    <p></p>
+    <button id='agreed' class="btn btn-primary">Принять</button>
+    <button id='refused' class="btn btn-primary">Отказаться</button>
+</div>
+
+<div id="overlay" style='display: none;'></div>
+
+
 <div class="container">
     <div class="row">
         <div class="col-sm-12" align="center">
@@ -30,4 +46,57 @@
     function redirect(link) {
         location.href = link;
     }
+
+
+    var invite = $('#invite');
+    var overlay = $('#overlay');
+    var info = $('#info')
+
+    var socket = io();
+
+    socket
+        .on('join', function() {
+            socket.emit('get online list');
+        })
+
+        .on('leave', function() {
+            socket.emit('get online list');
+        })
+
+        .on('game invite', function(from, room, creatorId) {
+
+            $('#invite p').text(from + ' приглашает вас в игру. Принять вызов?');
+            invite.show();
+            overlay.show();
+
+            $('#agreed').click(function() {
+                socket.emit('agreed', true, room, creatorId);
+                invite.hide();
+                overlay.hide();
+            });
+
+            $('#refused').click(function() {
+                socket.emit('agreed', false, room, creatorId);
+                invite.hide();
+                overlay.hide();
+            });
+        })
+        
+        .on('cancel invite', function() {
+            invite.hide();
+            overlay.hide();
+        })
+
+        .on('start game', function(username, room) {
+            $('#info p').text('Начинается игра против ' + username);
+
+            overlay.show();
+            info.show('slow');
+
+            setTimeout(function() {
+                overlay.hide();
+                info.hide('slow');
+                location.href = "/game/" + room;
+            }, 3000);
+        });
 </script>
