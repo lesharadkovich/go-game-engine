@@ -304,7 +304,19 @@ module.exports = class Rules {
     }
 
     //deletes surrounded existing coords
-    deleteCoords(surrounded, board, enemyColor) {
+    deleteCoords(surroundedCoords, board) {
+        for (var i = 0; i < surroundedCoords.length; i++) {
+            for (var j = 0; j < surroundedCoords[i].length; j++) {
+                var surrounded = surroundedCoords[i][j];
+
+                this.deleteOne(surrounded, board);
+            }
+        }
+    }
+    
+    deleteOne(surrounded, board) {
+        var enemyColor = this.color[this.currentPlayerColor];
+
         for (var i = 0; i < board.stoneCoords[enemyColor].length; i++) {
             for (var j = 0; j < board.stoneCoords[enemyColor][i].length; j++) {
                 var current = board.stoneCoords[enemyColor][i][j];

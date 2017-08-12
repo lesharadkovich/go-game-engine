@@ -102,21 +102,6 @@ module.exports = function (server) {
 
     var io = require('socket.io').listen(server);
 
-    var disconnectRoom = function (name) {
-        name = '/' + name;
-
-        var users = io.manager.rooms[name];
-
-        for (var i = 0; i < users.length; i++) {
-            io.sockets.socket(users[i]).disconnect();
-        }
-
-        return this;
-    };
-
-    // io.set('origins', 'http://localhost:*');
-    io.set('logger', log);
-
     io.use(function (socket, next) {
         var handshakeData = socket.request;
 

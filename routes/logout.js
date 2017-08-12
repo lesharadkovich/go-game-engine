@@ -1,27 +1,21 @@
-exports.post = function (req, res, next) {
+exports.post = function(req, res, next) {
+  var io = req.app.get('io');
   var sid = req.session.id;
 
-  var io = req.app.get('io');
   req.session.destroy(function (err) {
-    // io.sockets.emit("logout", sid);
-    if (err) return next(err);
+      var onlineListId = Object.keys(io.sockets.sockets);
 
-    res.redirect('/');
+      onlineListId.forEach(function (socketId) {
+          var socket = io.sockets.connected[socketId];
+
+          if (socket.handshake.session.id == sid) {
+              socket.emit('logout');
+              socket.disconnect();
+          }
+      });
+
+
+      if (err) return next(err);
+      res.redirect('/');
   });
-};
-
-
-// exports.post = function (req, res, next) {
-//   const sid = req.session.id;
-//   const io = req.app.get('io');
-
-//   req.session.destroy((err) => {
-//     if (io) {
-//       //io.sockets.emit("session:reload", sid);
-//       io.sockets._events.sessreload(sid);
-//     }
-
-//     if (err) return next(err);
-//     res.redirect('/');
-//   });
-// };
+}
